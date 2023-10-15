@@ -1,39 +1,33 @@
-<script>
-  import WeatherItems from './components/WeatherItems.vue';
+<script lang="ts">
+  import WeatherData from './components/WeatherData.vue';
   import axios from 'axios';
 
   export default {
     name: 'app',
     components: {
-      WeatherItems
+      WeatherData
     },
 
     data() {
       return {
-        name: '',
-        temp: 0
+        weatherData: []
       }
     },
 
-    methods: {
-      created() {
-        axios.get('https://api.openweathermap.org/data/2.5/weather?lat=44.34&lon=10.99&appid=199b2efcae35ce7c093a0c456250f838')
-        .then(
-          res => {
-              this.name = res.data.name;
-              this.temp = res.data.main.temp;
-              console.log(res)
-            }
-        )
-        .catch(err => console.log(err));
-      }
+    created() {
+      // console.log('App mounted');
+      axios.get('https://api.openweathermap.org/data/2.5/weather?lat=44.34&lon=10.99&units=metric&appid=199b2efcae35ce7c093a0c456250f838')
+      .then(res => {
+        this.weatherData = res.data
+      })
+      .catch(err => console.log(err));
     }
   }
 </script>
 
 <template>
   <h1> Hello </h1>
-  <WeatherItems :name="name" :temp="temp" />
+  <WeatherData :weatherData="weatherData" />
 </template>
 
 <style scoped>

@@ -1,24 +1,24 @@
 <script lang="ts">
     export default {
-        props: ['name', 'temp']
+        name: "WeatherItems",
+        props: ["data"]
     }
-
 </script>
 
 <template>
-    <div class="container">
-        <h1>{{ name }}</h1>
-        <h2>{{ temp }}</h2>
+    <div class="weather-item">
+        <h1>{{ data.name }}</h1>
+        <h3>{{ data.main.temp }}</h3>
     </div>  
 </template>
 
 <style scoped>
-    .container {
+    .weather-item {
         border: 1px solid grey;
         padding: 10px;
         border-radius: 10px;
     }
-    .container:hover {
+    .weather-item:hover {
         background-color: lightgrey;
     }
 </style>
