@@ -11,7 +11,8 @@
     data() {
       return {
         weatherData: [],
-        coord: '' as string
+        coord: '' as string,
+        APIKey: import.meta.env.VITE_API_KEY as string
       }
     },
 
@@ -23,9 +24,10 @@
       * @return {Promise<string>} - The coordinates in the format 'lat={latitude}&lon={longitude}'.
       */
      async getCoord(location: string): Promise<string> {
-        await axios.get('http://api.openweathermap.org/geo/1.0/direct?q=' + location + '&limit=5&appid=199b2efcae35ce7c093a0c456250f838')
+        await axios.get('http://api.openweathermap.org/geo/1.0/direct?q=' + location + '&limit=5&appid=' + this.APIKey)
         .then(res => {
             this.coord = `lat=${res.data[0].lat}&lon=${res.data[0].lon}`
+            console.log(this.APIKey)
           })
         .catch(err => console.log(err));
         return this.coord
@@ -41,7 +43,7 @@
       this.coord = await this.getCoord('Kuala Lumpur')
       // console.log(this.coord)
       // console.log('App mounted');
-      axios.get('https://api.openweathermap.org/data/2.5/weather?' + this.coord + '&units=metric&appid=199b2efcae35ce7c093a0c456250f838')
+      axios.get('https://api.openweathermap.org/data/2.5/weather?' + this.coord + '&units=metric&appid=' + this.APIKey)
       .then(res => {
         this.weatherData = res.data
       })
