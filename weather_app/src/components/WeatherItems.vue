@@ -1,14 +1,14 @@
 <script lang="ts">
     export default {
         name: "WeatherItems",
-        props: ["data"]
+        props: ["weatherData"]
     }
 </script>
 
 <template>
     <div class="weather-item">
-        <h1>{{ data.name }}</h1>
-        <h3>{{ data.main.temp }}</h3>
+        <h1>{{ weatherData.name }}</h1>
+        <h3>{{ weatherData.main.temp }}</h3>
     </div>  
 </template>
 
