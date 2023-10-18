@@ -19,7 +19,8 @@
 
    methods: {
       /**
-      * Retrieves the latitude and longitude coordinates for a given location.
+      * Retrieves the latitude and longitude coordinates for a given location 
+      * using the OpenWeatherMap API.
       *
       * @param {string} location - The location for which to retrieve coordinates.
       * @return {Promise<string>} - The coordinates in the format 'lat={latitude}&lon={longitude}'.
@@ -33,6 +34,24 @@
         .catch(err => console.log(err));
         return this.coord
       },
+
+      /**
+       * Retrieves the current location coordinates 
+       * using the HTML5 Geolocation API.
+       *
+       * @return {string} The current location coordinates formatted as 'lat={latitude}&lon={longitude}'.
+       */
+      getLocation() {
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(pos => {
+            this.coord = `lat=${pos.coords.latitude}&lon=${pos.coords.longitude}`
+            // console.log(this.coord)
+          })
+        }
+        else {
+          console.log('Geolocation is not supported by this browser.');
+        }
+      }
     },
     /**
      * Asynchronously initializes the component and fetches weather data.
@@ -40,7 +59,8 @@
      * @return {Promise<void>} A Promise that resolves when the component is created.
     */
     async created(): Promise<void> {
-      this.coord = await this.getCoord('Kuala Lumpur')
+      // this.coord = await this.getCoord('Kuala Lumpur')
+      this.coord = this.getLocation()
       // console.log(this.coord)
       // console.log('App mounted');
       axios.get('https://api.openweathermap.org/data/2.5/weather?' + this.coord + '&units=metric&appid=' + this.APIKey)
@@ -55,7 +75,6 @@
       var items = document.getElementsByClassName('weather-item');
       const item2 = document.getElementById('item2') as HTMLElement;
       
-      console.log(items)
       for (let i = 0; i < items.length; i++) { 
         for (let j = 0; j < items.length; j++) {
           items[i].addEventListener('mouseover', function(){
