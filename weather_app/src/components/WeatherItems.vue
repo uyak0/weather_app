@@ -1,12 +1,25 @@
 <script lang="ts">
     export default {
         name: "WeatherItems",
-        props: ["weatherData"]
+        props: ["weatherData"],
+
+        data() {
+            return {
+                mouseCoord: 0
+            }
+        },
+
+        methods: {
+            onMouseMove(event: MouseEvent) {
+                this.mouseCoord = event.clientX;
+            },
+        }
     }
 </script>
 
 <template>
-    <div class="weather-item">
+    <div class="weather-item" 
+         @mousemove="onMouseMove">
         <h1>{{ weatherData.name }}</h1>
         <h2>{{ weatherData.sys.country }}</h2>
         <h3>{{ weatherData.main.temp }}</h3>

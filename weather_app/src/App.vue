@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { ref } from 'vue';
   import WeatherItems from './components/WeatherItems.vue';
   import axios from 'axios';
 
@@ -12,7 +13,7 @@
       return {
         weatherData: [],
         coord: '' as string,
-        APIKey: import.meta.env.VITE_API_KEY as string
+        APIKey: import.meta.env.VITE_API_KEY as string,
       }
     },
 
@@ -27,18 +28,17 @@
         await axios.get('http://api.openweathermap.org/geo/1.0/direct?q=' + location + '&limit=5&appid=' + this.APIKey)
         .then(res => {
             this.coord = `lat=${res.data[0].lat}&lon=${res.data[0].lon}`
-            console.log(this.APIKey)
+            // console.log(this.APIKey)
           })
         .catch(err => console.log(err));
         return this.coord
-      }
+      },
     },
-
     /**
-     * Initializes the component when it is created.
+     * Asynchronously initializes the component and fetches weather data.
      *
-     * @return {Promise<void>} - A promise that resolves when the component is created.
-     */
+     * @return {Promise<void>} A Promise that resolves when the component is created.
+    */
     async created(): Promise<void> {
       this.coord = await this.getCoord('Kuala Lumpur')
       // console.log(this.coord)
@@ -48,6 +48,41 @@
         this.weatherData = res.data
       })
       .catch(err => console.log(err));
+    },
+
+    mounted() {
+      // Hover effects for items
+      var items = document.getElementsByClassName('weather-item');
+      const item2 = document.getElementById('item2') as HTMLElement;
+      
+      console.log(items)
+      for (let i = 0; i < items.length; i++) { 
+        for (let j = 0; j < items.length; j++) {
+          items[i].addEventListener('mouseover', function(){
+            items[i].classList.add('hovered');
+            if (i != j) {
+              items[j].classList.add('unhovered');
+            }
+            if (item2.classList.contains('unhovered')) {
+              if (items[0].classList.contains('hovered')) {
+                item2.style.transform = "scale(0.8) translate(50px, -10px) rotate(5deg)";
+              }
+              else if (items[2].classList.contains('hovered')) {
+                item2.style.transform = "scale(0.8) translate(-50px, 10px) rotate(-5deg)";
+              }
+            }
+          })
+
+          items[i].addEventListener('mouseout', function(){
+            items[i].classList.remove('hovered');
+            item2.style.transform = "";
+            if (i != j) {
+              items[j].classList.remove('unhovered');
+              item2.style.transform = "";
+            }
+          })
+        }
+      }
     }
   }
 </script>
@@ -59,48 +94,15 @@
 </template>
 
 <style scoped>
-  #item1 {
-    transform: rotate(-5deg) translate(15px, 15px);
-  }
-  #item1:hover {
-    transform: scale(1.25) rotate(-10deg);
-    z-index: 0;
-  }
-  #item1:hover ~ #item3 {
-    transform: scale(0.8) translate(-30px, 40px) rotate(15deg);
-    z-index: 0;
-    filter: blur(2px);
-  }
-  #item1:hover + #item2 {
-    transform: scale(0.8) translate(50px, -10px) rotate(5deg);
-    z-index: 1;
-    filter: blur(2px);
-  }
+  #item1 { transform: rotate(-5deg) translate(15px, 15px); }
+  #item2 { transform: translate(0, -10px); z-index: 1; }
+  #item3 { transform: translate(-15px, 15px) rotate(5deg); }
 
-  #item2 {
-    transform: translate(0, -10px);
-    z-index: 1;
-  }
-  #item2:hover {
-    transform: scale(1.25);
-  }
-  #item2::before:hover {
-    transform: scale(0.8) translate(50px, -10px) rotate(5deg);
-    filter: blur(2px);
-  }
-  #item2:hover + #item3 {
-    transform: scale(0.8) translate(-30px, 40px) rotate(15deg);
-    filter: blur(2px);
-  }
-  #item2:hover  {
-    
-  }
+  .hovered#item1 { transform: scale(1.25) rotate(-10deg); }
+  .hovered#item2 { transform: scale(1.25); }
+  .hovered#item3 { transform: scale(1.25) rotate(10deg); }
 
-  #item3 {
-    transform: translate(-15px, 15px) rotate(5deg);
-  }
-  #item3:hover {
-    transform: scale(1.1) rotate(1deg);
-    z-index: 1;
-  }
+  .unhovered { filter: blur(2px) }
+  .unhovered#item1 { transform: scale(0.8) translate(30px, 40px) rotate(-15deg); }
+  .unhovered#item3 { transform: scale(0.8) translate(-30px, 40px) rotate(15deg); }
 </style>
