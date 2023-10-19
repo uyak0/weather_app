@@ -34,36 +34,30 @@
         .catch(err => console.log(err));
         return this.coord
       },
-
-      /**
-       * Retrieves the current location coordinates 
-       * using the HTML5 Geolocation API.
-       *
-       * @return {string} The current location coordinates formatted as 'lat={latitude}&lon={longitude}'.
-       */
-      getLocation() {
-        if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition(pos => {
-            this.coord = `lat=${pos.coords.latitude}&lon=${pos.coords.longitude}`
-            // console.log(this.coord)
-          })
-        }
-        else {
-          console.log('Geolocation is not supported by this browser.');
-        }
-      }
     },
+
     /**
      * Asynchronously initializes the component and fetches weather data.
      *
      * @return {Promise<void>} A Promise that resolves when the component is created.
     */
     async created(): Promise<void> {
-      // this.coord = await this.getCoord('Kuala Lumpur')
-      this.coord = this.getLocation()
-      // console.log(this.coord)
-      // console.log('App mounted');
-      axios.get('https://api.openweathermap.org/data/2.5/weather?' + this.coord + '&units=metric&appid=' + this.APIKey)
+
+      /**
+       * Retrieves the current position of the user.
+       *
+       * @return {Promise} A Promise that resolves with the current position or rejects with an error.
+       */
+      const getPos = () => {
+        return new Promise((resolve, reject) => {
+            navigator.geolocation.getCurrentPosition(resolve, reject);
+        });
+      };
+      
+      const pos = await getPos() as GeolocationPosition;
+      this.coord = `lat=${pos.coords.latitude}&lon=${pos.coords.longitude}`
+
+      await axios.get('https://api.openweathermap.org/data/2.5/weather?' + this.coord + '&units=metric&appid=' + this.APIKey)
       .then(res => {
         this.weatherData = res.data
       })
@@ -71,37 +65,38 @@
     },
 
     mounted() {
-      // Hover effects for items
-      var items = document.getElementsByClassName('weather-item');
+      /** Hover Effects on Weather Items */
+      const weatherItems = document.getElementsByClassName('weather-item');
       const item2 = document.getElementById('item2') as HTMLElement;
-      
-      for (let i = 0; i < items.length; i++) { 
-        for (let j = 0; j < items.length; j++) {
-          items[i].addEventListener('mouseover', function(){
-            items[i].classList.add('hovered');
+
+      for (let i = 0; i < weatherItems.length; i++) { 
+        for (let j = 0; j < weatherItems.length; j++) {
+          weatherItems[i].addEventListener('mouseover', function(){
+            weatherItems[i].classList.add('hovered');
             if (i != j) {
-              items[j].classList.add('unhovered');
+              weatherItems[j].classList.add('unhovered');
             }
             if (item2.classList.contains('unhovered')) {
-              if (items[0].classList.contains('hovered')) {
+              if (weatherItems[0].classList.contains('hovered')) {
                 item2.style.transform = "scale(0.8) translate(50px, -10px) rotate(5deg)";
               }
-              else if (items[2].classList.contains('hovered')) {
-                item2.style.transform = "scale(0.8) translate(-50px, 10px) rotate(-5deg)";
+              else if (weatherItems[2].classList.contains('hovered')) {
+                item2.style.transform = "scale(0.8) translate(-50px, -10px) rotate(-5deg)";
               }
             }
           })
 
-          items[i].addEventListener('mouseout', function(){
-            items[i].classList.remove('hovered');
+          weatherItems[i].addEventListener('mouseout', function(){
+            weatherItems[i].classList.remove('hovered');
             item2.style.transform = "";
             if (i != j) {
-              items[j].classList.remove('unhovered');
+              weatherItems[j].classList.remove('unhovered');
               item2.style.transform = "";
             }
           })
         }
       }
+      /** -------- */
     }
   }
 </script>
@@ -119,7 +114,7 @@
 
   .hovered#item1 { transform: scale(1.25) rotate(-10deg); }
   .hovered#item2 { transform: scale(1.25); }
-  .hovered#item3 { transform: scale(1.25) rotate(10deg); }
+  .hovered#item3 { transform: scale(1.25) rotate(10deg) translate3d(0,0,10px); }
 
   .unhovered { filter: blur(2px) }
   .unhovered#item1 { transform: scale(0.8) translate(30px, 40px) rotate(-15deg); }
