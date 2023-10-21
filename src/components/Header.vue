@@ -1,4 +1,4 @@
-<template>
+<template> 
     <div>
         <nav>
             <img class="logo" src="../assets/weather-icon.png">
