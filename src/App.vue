@@ -110,7 +110,7 @@
 
     async mounted() {
       await this.findCurrLocation();
-      // await this.findNearBy();
+      console.log(this.coords);
       await this.findWeather();
       this.applyHoverEffects();
     }
@@ -120,11 +120,11 @@
 <template>
   <Header />
 
-  <template v-if="weatherData.length < 2 && weatherData.length != 0">
+  <template v-if="weatherData.length < 2">
     <WeatherItems class="weather-item" id="item2" :weatherData="weatherData[0]" />
   </template>
 
-  <template v-else-if="weatherData.length > 2">
+  <template v-else-if="weatherData.length >= 2">
     <WeatherItems class="weather-item" id="item1" :weatherData="weatherData[1]" />
     <WeatherItems class="weather-item" id="item2" :weatherData="weatherData[0]" />
     <WeatherItems class="weather-item" id="item3" :weatherData="weatherData[2]" />

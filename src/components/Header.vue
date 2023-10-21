@@ -2,32 +2,23 @@
     <div>
         <nav>
             <img class="logo" src="../assets/weather-icon.png">
-            <input type="text" placeholder="Add location...">
         </nav>
     </div>
 </template>
 
 <style scoped>
-    input {
-        display: block;
-        margin: auto;
-        margin-bottom: 10px;
-        border-radius: 10px;
-        border-style: solid;   
-    }
     img {
         display: block;
         width: 65px;
-        margin: 0px 0px 20px 0px;
+        margin: auto;
     }
     nav {
-        display: grid;
-        align-items: left;
-        position: fixed;
+        position:fixed;
         top: 0;
         left: 0;
         min-width: 100%;
         min-height: 2.5rem;
+        top: 0;
         margin: 0;
         padding: 0;
         background-color: white;
