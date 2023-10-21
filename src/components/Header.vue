@@ -1,7 +1,7 @@
 <template>
     <div>
         <nav>
-            <img class="logo" src="../assets/weather-icon.png">
+            <img class="logo" src="../assets/weather-icon.png" alt="weather-logo">
             <input type="text" placeholder="Add location...">
         </nav>
     </div>
@@ -9,20 +9,19 @@
 
 <style scoped>
     input {
-        display: block;
-        margin: auto;
-        margin-bottom: 10px;
-        border-radius: 10px;
-        border-style: solid;   
+        font-size: 15px;
+        float: right;
+        margin: 1.5rem 1rem 0 0;
+        padding: 2px 0 2px 10px;
+        border-radius: 15px;
+        border-style: solid;
     }
     img {
-        display: block;
         width: 65px;
-        margin: 0px 0px 20px 0px;
+        margin: 0 0 0 10px;
     }
     nav {
-        display: grid;
-        align-items: left;
+        display:inline;
         position: fixed;
         top: 0;
         left: 0;
