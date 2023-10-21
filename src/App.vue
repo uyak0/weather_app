@@ -1,110 +1,134 @@
 <script lang="ts">
-  import { ref } from 'vue';
+  import Header from './components/Header.vue';
   import WeatherItems from './components/WeatherItems.vue';
   import axios from 'axios';
 
   export default {
     name: 'app',
     components: {
+      Header,
       WeatherItems
     },
 
     data() {
       return {
-        weatherData: [],
-        coord: '' as string,
+        weatherData: [] as Array<any>,
+        coords: [] as Array<[number, number]>,
         APIKey: import.meta.env.VITE_API_KEY as string,
       }
     },
 
-   methods: {
+    methods: {
       /**
-      * Retrieves the latitude and longitude coordinates for a given location 
-      * using the OpenWeatherMap API.
-      *
-      * @param {string} location - The location for which to retrieve coordinates.
-      * @return {Promise<string>} - The coordinates in the format 'lat={latitude}&lon={longitude}'.
-      */
-     async getCoord(location: string): Promise<string> {
-        await axios.get('http://api.openweathermap.org/geo/1.0/direct?q=' + location + '&limit=5&appid=' + this.APIKey)
-        .then(res => {
-            this.coord = `lat=${res.data[0].lat}&lon=${res.data[0].lon}`
-            // console.log(this.APIKey)
-          })
-        .catch(err => console.log(err));
-        return this.coord
-      },
-    },
-
-    /**
-     * Asynchronously initializes the component and fetches weather data.
-     *
-     * @return {Promise<void>} A Promise that resolves when the component is created.
-    */
-    async created(): Promise<void> {
-
-      /**
-       * Retrieves the current position of the user.
+       * Finds the current location using the geolocation API and adds 
+       * the latitude and longitude to the `coords` array.
        *
-       * @return {Promise} A Promise that resolves with the current position or rejects with an error.
+       * @return {Promise<void>} Returns a promise that resolves when the 
+       * location is found and the coordinates are added to the `coords` array.
        */
-      const getPos = () => {
-        return new Promise((resolve, reject) => {
+      async findCurrLocation(): Promise<void> {
+        const getPos = () => {
+          return new Promise((resolve, reject) => {
             navigator.geolocation.getCurrentPosition(resolve, reject);
-        });
-      };
-      
-      const pos = await getPos() as GeolocationPosition;
-      this.coord = `lat=${pos.coords.latitude}&lon=${pos.coords.longitude}`
+          });
+        };
 
-      await axios.get('https://api.openweathermap.org/data/2.5/weather?' + this.coord + '&units=metric&appid=' + this.APIKey)
-      .then(res => {
-        this.weatherData = res.data
-      })
-      .catch(err => console.log(err));
-    },
+        const pos = await getPos() as GeolocationPosition;
+        this.coords.push([pos.coords.latitude, pos.coords.longitude]);
+      },
 
-    mounted() {
-      /** Hover Effects on Weather Items */
-      const weatherItems = document.getElementsByClassName('weather-item');
-      const item2 = document.getElementById('item2') as HTMLElement;
+      /**
+       * Finds nearby places based on the current user's geolocation.
+       *
+       * @return {Promise<void>} Resolves when the nearby places have been found.
+       */
+      async findNearBy(): Promise<void> {
+        await axios.get('http://api.geonames.org/findNearbyPlaceNameJSON?lat=' +
+                        this.coords[0][0] + '&lng=' + this.coords[0][1] +
+                        '&cities=cities15000&radius=30&username=uyako')
+        .then(res => {
+          for (let i = 0; i < 2; i++) {
+            this.coords.push([res.data.geonames[i].lat, res.data.geonames[i].lng])
+          }
+        })
+        .catch(err => console.log(err));
+      },
 
-      for (let i = 0; i < weatherItems.length; i++) { 
-        for (let j = 0; j < weatherItems.length; j++) {
-          weatherItems[i].addEventListener('mouseover', function(){
-            weatherItems[i].classList.add('hovered');
-            if (i != j) {
-              weatherItems[j].classList.add('unhovered');
-            }
-            if (item2.classList.contains('unhovered')) {
-              if (weatherItems[0].classList.contains('hovered')) {
-                item2.style.transform = "scale(0.8) translate(50px, -10px) rotate(5deg)";
+      /**
+       * Retrieves weather data for each set of coordinates in the `coords` array.
+       *
+       * @return {Promise<void>} - A promise that resolves when all weather data is fetched.
+       */
+      async findWeather(): Promise<void> {
+        for (let i = 0; i < this.coords.length; i++) {
+          await axios.get('https://api.openweathermap.org/data/2.5/weather?lat=' +
+            this.coords[i][0] + '&lon=' + this.coords[i][1] +
+            '&units=metric&appid=' + this.APIKey)
+            .then(res => {
+              this.weatherData.push(res.data)
+            })
+            .catch(err => console.log(err));
+        }
+      },
+
+      /**
+       * Applies hover effects to weather items, specifically to item2.
+       */
+      applyHoverEffects() {
+        const weatherItems = document.getElementsByClassName('weather-item');
+        const item2 = document.getElementById('item2') as HTMLElement;
+
+        for (let i = 0; i < weatherItems.length; i++) {
+          for (let j = 0; j < weatherItems.length; j++) {
+            weatherItems[i].addEventListener('mouseover', function () {
+              weatherItems[i].classList.add('hovered');
+              if (i != j) {
+                weatherItems[j].classList.add('unhovered');
               }
-              else if (weatherItems[2].classList.contains('hovered')) {
-                item2.style.transform = "scale(0.8) translate(-50px, -10px) rotate(-5deg)";
+              if (item2.classList.contains('unhovered')) {
+                if (weatherItems[0].classList.contains('hovered')) {
+                  item2.style.transform = "scale(0.8) translate(50px, -10px) rotate(5deg)";
+                }
+                else if (weatherItems[2].classList.contains('hovered')) {
+                  item2.style.transform = "scale(0.8) translate(-50px, -10px) rotate(-5deg)";
+                }
               }
-            }
-          })
+            })
 
-          weatherItems[i].addEventListener('mouseout', function(){
-            weatherItems[i].classList.remove('hovered');
-            item2.style.transform = "";
-            if (i != j) {
-              weatherItems[j].classList.remove('unhovered');
+            weatherItems[i].addEventListener('mouseout', function () {
+              weatherItems[i].classList.remove('hovered');
               item2.style.transform = "";
-            }
-          })
+              if (i != j) {
+                weatherItems[j].classList.remove('unhovered');
+                item2.style.transform = "";
+              }
+            })
+          }
         }
       }
-      /** -------- */
+    },
+
+    async mounted() {
+      await this.findCurrLocation();
+      console.log(this.coords);
+      await this.findWeather();
+      this.applyHoverEffects();
     }
   }
 </script>
 
 <template>
-  <WeatherItems class="weather-item" id="item1" :weatherData="weatherData" />
-  <WeatherItems class="weather-item" id="item2" :weatherData="weatherData" />
-  <WeatherItems class="weather-item" id="item3" :weatherData="weatherData" />
+  <Header />
+
+  <template v-if="weatherData.length < 2">
+    <WeatherItems class="weather-item" id="item2" :weatherData="weatherData[0]" />
+  </template>
+
+  <template v-else-if="weatherData.length >= 2">
+    <WeatherItems class="weather-item" id="item1" :weatherData="weatherData[1]" />
+    <WeatherItems class="weather-item" id="item2" :weatherData="weatherData[0]" />
+    <WeatherItems class="weather-item" id="item3" :weatherData="weatherData[2]" />
+  </template>
 </template>
 
 <style scoped>

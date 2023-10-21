@@ -2,32 +2,26 @@
     export default {
         name: "WeatherItems",
         props: ["weatherData"],
-
-        data() {
-            return {
-                mouseCoord: 0
-            }
-        },
-
-        methods: {
-            onMouseMove(event: MouseEvent) {
-                this.mouseCoord = event.clientX;
-            },
-        }
     }
 </script>
 
 <template>
-    <div class="weather-item" 
-         @mousemove="onMouseMove">
-        <h1>{{ weatherData.name }}</h1>
-        <h2>{{ weatherData.sys.country }}</h2>
-        <h3>{{ weatherData.main.temp }}</h3>
+    <div class="weather-item" >
+        <h1 style="font-weight: 600">{{ weatherData.name }}</h1>
+        <h2 style="font-weight: 250">{{ weatherData.sys.country }}</h2>
+        <h3 style="font-weight: 100">{{ weatherData.main.temp }} °C</h3>
     </div>  
 </template>
 
 <style scoped>
     .weather-item {
+        width: 250px;
+        height: 310px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
         background-color: white;
         text-align: center;
         border: 1px solid grey;
