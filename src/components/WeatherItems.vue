@@ -6,10 +6,10 @@
 </script>
 
 <template>
-    <div class="weather-item" >
-        <h1 style="font-weight: 600">{{ weatherData.name }}</h1>
-        <h2 style="font-weight: 250">{{ weatherData.sys.country }}</h2>
-        <h3 style="font-weight: 100">{{ weatherData.main.temp }} °C</h3>
+    <div class="weather-item hover:scale-125" >
+        <p class="font-semibold text-2xl">{{ weatherData.name }}</p>
+        <p class="font-light text-xl">{{ weatherData.sys.country }}</p>
+        <p class="font-thin">{{ weatherData.main.temp }} °C</p>
     </div>  
 </template>
 
