@@ -2,6 +2,7 @@
   import Header from './components/Header.vue';
   import WeatherItems from './components/WeatherItems.vue';
   import axios from 'axios';
+  import { inject } from 'vue';
 
   export default {
     name: 'app',
@@ -15,6 +16,7 @@
         weatherData: [] as Array<any>,
         coords: [] as Array<[number, number]>,
         APIKey: import.meta.env.VITE_API_KEY as string,
+        isHovered: false,
       }
     },
 
@@ -60,6 +62,7 @@
        * @return {Promise<void>} - A promise that resolves when all weather data is fetched.
        */
       async findWeather(): Promise<void> {
+        this.weatherData = []
         for (let i = 0; i < this.coords.length; i++) {
           await axios.get('https://api.openweathermap.org/data/2.5/weather?lat=' +
             this.coords[i][0] + '&lon=' + this.coords[i][1] +
@@ -69,43 +72,28 @@
             })
             .catch(err => console.log(err));
         }
+        this.applyHoverEffects()
       },
 
       /**
        * Applies hover effects to weather items, specifically to item2.
        */
       applyHoverEffects() {
-        const weatherItems = document.getElementsByClassName('weather-item');
-        const item2 = document.getElementById('item2') as HTMLElement;
-
-        for (let i = 0; i < weatherItems.length; i++) {
-          for (let j = 0; j < weatherItems.length; j++) {
-            weatherItems[i].addEventListener('mouseover', function () {
-              weatherItems[i].classList.add('hovered');
-              if (i != j) {
-                weatherItems[j].classList.add('unhovered');
-              }
-              if (item2.classList.contains('unhovered')) {
-                if (weatherItems[0].classList.contains('hovered')) {
-                  item2.style.transform = "scale(0.8) translate(50px, -10px) rotate(5deg)";
-                }
-                else if (weatherItems[2].classList.contains('hovered')) {
-                  item2.style.transform = "scale(0.8) translate(-50px, -10px) rotate(-5deg)";
-                }
-              }
-            })
-
-            weatherItems[i].addEventListener('mouseout', function () {
-              weatherItems[i].classList.remove('hovered');
-              item2.style.transform = "";
-              if (i != j) {
-                weatherItems[j].classList.remove('unhovered');
-                item2.style.transform = "";
-              }
-            })
-          }
+        if (!this.isHovered) {  
+          
         }
+      },
+
+      async addLocation(location: string) {
+        await axios.get('http://api.openweathermap.org/geo/1.0/direct?q=' + 
+          location + '&limit=5&appid=' + this.APIKey)
+          .then(res => {
+            this.coords.push([res.data[0].lat, res.data[0].lon])
+          })
+          .catch(err => console.log(err));
+          await this.findWeather();
       }
+
     },
 
     async mounted() {
@@ -118,29 +106,33 @@
 </script>
 
 <template>
-  <Header />
+  <div class="flex flex-wrap flex-col min-h-screen">
+    <Header @add-location="addLocation"/>
 
-  <template v-if="weatherData.length < 2">
-    <WeatherItems class="weather-item" id="item2" :weatherData="weatherData[0]" />
-  </template>
-
-  <template v-else-if="weatherData.length >= 2">
-    <WeatherItems class="weather-item" id="item1" :weatherData="weatherData[1]" />
-    <WeatherItems class="weather-item" id="item2" :weatherData="weatherData[0]" />
-    <WeatherItems class="weather-item" id="item3" :weatherData="weatherData[2]" />
-  </template>
+    <div class="px-12 my-auto grid grid-cols-3 gap-2">
+      <template v-for="(data, index) in weatherData">
+        <WeatherItems class="weather-item" 
+                    :id="'item' + index"
+                    :weatherData="data"
+                    :class="{ hovered: isHovered }"
+                    @mouseover="isHovered = true" @mouseleave="isHovered = false" />
+      </template>
+    </div>  
+  </div>
 </template>
 
 <style scoped>
-  #item1 { transform: rotate(-5deg) translate(15px, 15px); }
+    
+
+  /* #item1 { transform: rotate(-5deg) translate(15px, 15px); }
   #item2 { transform: translate(0, -10px); z-index: 1; }
   #item3 { transform: translate(-15px, 15px) rotate(5deg); }
 
-  .hovered#item1 { transform: scale(1.25) rotate(-10deg); }
-  .hovered#item2 { transform: scale(1.25); }
-  .hovered#item3 { transform: scale(1.25) rotate(10deg) translate3d(0,0,10px); }
+  .hovered#item1 { transform: scale(1.25) rotate(-10deg); }  
+  .hovered#item2 { transform: scale(1.25); }     
+  .hovered#item3 { transform: scale(1.25) rotate(10deg) translate3d(0,0,10px); }  
 
   .unhovered { filter: blur(2px) }
   .unhovered#item1 { transform: scale(0.8) translate(30px, 40px) rotate(-15deg); }
-  .unhovered#item3 { transform: scale(0.8) translate(-30px, 40px) rotate(15deg); }
+  .unhovered#item3 { transform: scale(0.8) translate(-30px, 40px) rotate(15deg); } */
 </style>

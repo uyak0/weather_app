@@ -1,27 +1,54 @@
-<template> 
-    <div>
-        <nav>
-            <img class="logo" src="../assets/weather-icon.png">
-        </nav>
-    </div>
+
+<script lang="ts">
+    export default {
+        name: "Header",
+        emits: ['add-location'],
+        data() {
+            return {
+                input: '',
+            }
+        },
+        methods: {
+            addLocation(input: string) {
+                this.$emit('add-location', input);
+                this.input='';
+            }
+        }
+    }
+</script>
+
+<template>  
+    <nav>
+        <img class="w-16 mx-2 my-2 float-left" src="../assets/weather-icon.png" alt="weather-logo">
+        <span class="searchbar">
+            <img class="w-4 float-right" src="src/assets/search-solid.svg">
+            <input class="px-2 focus:outline-none" v-model="input" @keyup.enter="addLocation(input)" placeholder="Add location..."> 
+        </span>
+    </nav>
 </template>
 
 <style scoped>
-    img {
-        display: block;
-        width: 65px;
-        margin: auto;
+    .searchbar {
+        @apply
+        float-right
+        flex
+        border-solid
+        border-gray-300 
+        border 
+        rounded-full
+        font-medium
+        px-3 py-1
+        mx-4 my-7 
     }
+
     nav {
-        position:fixed;
-        top: 0;
-        left: 0;
-        min-width: 100%;
-        min-height: 2.5rem;
-        top: 0;
-        margin: 0;
-        padding: 0;
-        background-color: white;
-        box-shadow: 0px 2px 5px rgba(201, 201, 201, 0.6);
+        @apply
+        w-full
+        fixed 
+        top-0 left-0
+        shadow-md
+        items-center 
+        mx-auto 
+        bg-white
     }
 </style>
