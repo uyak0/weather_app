@@ -98,7 +98,7 @@
 
     async mounted() {
       await this.findCurrLocation();
-      // await this.findNearBy();
+      console.log(this.coords);
       await this.findWeather();
       this.applyHoverEffects();
     }
