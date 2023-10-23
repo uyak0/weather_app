@@ -17,15 +17,13 @@
 </script>
 
 <template>  
-    <div>
-        <nav>
-            <img class="w-16 mx-2 my-2 float-left" src="../assets/weather-icon.png" alt="weather-logo">
-            <span class="searchbar">
-                <img class="w-4 float-right" src="src/assets/search-solid.svg">
-                <input class="px-2 focus:outline-none" v-model="input" @keyup.enter="addLocation(input)" placeholder="Add location..."> 
-            </span>
-        </nav>
-    </div>
+    <nav>
+        <img class="w-16 mx-2 my-2 float-left" src="../assets/weather-icon.png" alt="weather-logo">
+        <span class="searchbar">
+            <img class="w-4 float-right" src="src/assets/search-solid.svg">
+            <input class="px-2 focus:outline-none" v-model="input" @keyup.enter="addLocation(input)" placeholder="Add location..."> 
+        </span>
+    </nav>
 </template>
 
 <style scoped>
@@ -50,5 +48,6 @@
         shadow-md
         items-center 
         mx-auto 
+        bg-white
     }
 </style>

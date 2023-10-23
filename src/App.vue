@@ -106,15 +106,19 @@
 </script>
 
 <template>
-  <Header @add-location="addLocation"/>
+  <div class="flex flex-wrap flex-col min-h-screen">
+    <Header @add-location="addLocation"/>
 
-  <template class="grid gap-2" v-for="data in weatherData">
-    <WeatherItems class="weather-item" 
-                  :id="'item' + data"
-                  :weatherData="data"
-                  :class="{ hovered: isHovered }"
-                  @mouseover="isHovered = true" @mouseleave="isHovered = false" />
-  </template>
+    <div class="px-12 my-auto grid grid-cols-3 gap-2">
+      <template v-for="(data, index) in weatherData">
+        <WeatherItems class="weather-item" 
+                    :id="'item' + index"
+                    :weatherData="data"
+                    :class="{ hovered: isHovered }"
+                    @mouseover="isHovered = true" @mouseleave="isHovered = false" />
+      </template>
+    </div>  
+  </div>
 </template>
 
 <style scoped>
