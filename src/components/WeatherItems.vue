@@ -2,11 +2,24 @@
     export default {
         name: "WeatherItems",
         props: ["weatherData"],
+        data() {
+            return {
+                showDiv: true 
+            }
+        },
+
+        methods: {
+        }
     }
 </script>
 
 <template>
-    <div class="weather-item hover:scale-125" >
+    <div class="weather-item relative rounded-lg w-64 h-64 pt-20 flex-col justify-center items-center bg-white text-center cursor-pointer shadow-md hover:shadow-2xl hover:-translate-y-4" :class="{ hidden : !showDiv, flex: showDiv}" @click="showDiv = false">
+        <div class="absolute top-2 left-2">    
+            <svg xmlns="http://www.w3.org/2000/svg" width="15px" viewBox="0 0 24 24" fill="#9ca3af">
+                <path d="M5 5L19 19M5 19L19 5" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </div>
         <p class="font-semibold text-2xl">{{ weatherData.name }}</p>
         <p class="font-light text-xl">{{ weatherData.sys.country }}</p>
         <p class="font-thin">{{ weatherData.main.temp }} °C</p>
@@ -15,26 +28,12 @@
 
 <style scoped>
     .weather-item {
-        width: 250px;
-        height: 310px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-
-        background-color: white;
-        text-align: center;
         border: 1px solid grey;
-        padding: 10rem 20px 12.5px;
-        border-radius: 10px;
         transition: 0.5s;
-        box-shadow: 10px 10px 10px rgba(201, 201, 201, 0.6);
     }
     .weather-item:hover {
         background-color: lightgrey;
         color: darkslategrey;
         transition: 0.5s;
-        cursor: default;
-        box-shadow: none;
     }
 </style>

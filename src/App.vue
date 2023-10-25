@@ -92,8 +92,7 @@
           })
           .catch(err => console.log(err));
           await this.findWeather();
-      }
-
+      },
     },
 
     async mounted() {
@@ -109,10 +108,9 @@
   <div class="flex flex-wrap flex-col min-h-screen">
     <Header @add-location="addLocation"/>
 
-    <div class="px-12 my-auto grid grid-cols-3 gap-2">
+    <div class="flex flex-wrap grid-cols-5 gap-2 py-20">
       <template v-for="(data, index) in weatherData">
-        <WeatherItems class="weather-item" 
-                    :id="'item' + index"
+        <WeatherItems :id="'item' + index"
                     :weatherData="data"
                     :class="{ hovered: isHovered }"
                     @mouseover="isHovered = true" @mouseleave="isHovered = false" />
@@ -121,18 +119,3 @@
   </div>
 </template>
 
-<style scoped>
-    
-
-  /* #item1 { transform: rotate(-5deg) translate(15px, 15px); }
-  #item2 { transform: translate(0, -10px); z-index: 1; }
-  #item3 { transform: translate(-15px, 15px) rotate(5deg); }
-
-  .hovered#item1 { transform: scale(1.25) rotate(-10deg); }  
-  .hovered#item2 { transform: scale(1.25); }     
-  .hovered#item3 { transform: scale(1.25) rotate(10deg) translate3d(0,0,10px); }  
-
-  .unhovered { filter: blur(2px) }
-  .unhovered#item1 { transform: scale(0.8) translate(30px, 40px) rotate(-15deg); }
-  .unhovered#item3 { transform: scale(0.8) translate(-30px, 40px) rotate(15deg); } */
-</style>
