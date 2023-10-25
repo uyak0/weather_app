@@ -1,13 +1,19 @@
-
 <script lang="ts">
+    import ToggleTheme from './ToggleTheme.vue';
+
     export default {
         name: "Header",
+        components: {
+            ToggleTheme
+        },
+
         emits: ['add-location'],
         data() {
             return {
                 input: '',
             }
         },
+
         methods: {
             addLocation(input: string) {
                 this.$emit('add-location', input);
@@ -20,6 +26,9 @@
 <template>  
     <nav class="w-full fixed top-0 left-0 shadow-md items-center bg-white">
         <img class="w-16 mx-2 my-2 float-left" src="../assets/weather-icon.png" alt="weather-logo">
+        <div class="absolute right-80 top-8">
+            <ToggleTheme />
+        </div>
         <span class="relative float-right flex border-solid border border-gray-300 rounded-full font-medium px-4 py-1 mx-5 my-7">
             <div class="absolute pointer-events-none mt-1">
                 <svg class="absolute" xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512" fill="#9ca3af">
