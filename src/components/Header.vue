@@ -8,22 +8,29 @@
             ToggleTheme,
             Searchbar,
         },
-        emits: ['add-location'],
+        emits: ['add-location', 'dark-toggle'],
+
+        data() {
+            return {
+                isToggled: false,
+                input: '',
+            }
+        }
     }
 </script>
 
 <template>  
-    <nav class="grid grid-cols-3 gap-4 w-full top-0 left-0 shadow-md items-center bg-white">
+    <nav class="grid grid-cols-5 gap-4 w-full top-0 left-0 shadow-md items-center bg-white">
         <img class="w-16 mx-2 my-2 float-left" src="../assets/weather-icon.png" alt="weather-logo">
         
         <!-- Theme Toggle Button -->
-        <div class="flex flex-row-reverse mx-3">
-            <ToggleTheme />
+        <div class="flex flex-row-reverse mx-3 col-start-4">
+            <ToggleTheme @dark-toggle="$emit('dark-toggle', isToggled)"/>
         </div>
 
         <!-- Searchbar -->
-        <div>
-            <Searchbar />
+        <div class="col-start-5">
+            <Searchbar @add-location="$emit('add-location', input)"/>
         </div>
 
     </nav>

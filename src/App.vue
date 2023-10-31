@@ -16,7 +16,7 @@
         weatherData: [] as Array<any>,
         coords: [] as Array<[number, number]>,
         APIKey: import.meta.env.VITE_API_KEY as string,
-        isHovered: false,
+        darkMode: false,
       }
     },
 
@@ -72,16 +72,6 @@
             })
             .catch(err => console.log(err));
         }
-        this.applyHoverEffects()
-      },
-
-      /**
-       * Applies hover effects to weather items, specifically to item2.
-       */
-      applyHoverEffects() {
-        if (!this.isHovered) {  
-          
-        }
       },
 
       async addLocation(location: string) {
@@ -99,23 +89,22 @@
       await this.findCurrLocation();
       console.log(this.coords);
       await this.findWeather();
-      this.applyHoverEffects();
     }
   }
 </script>
 
 <template>
-  <div class="flex flex-wrap flex-col min-h-screen">
-    <Header @add-location="addLocation"/>
+  <!-- Dark Mode -->
+  <div class="dark:bg-black bg-white" :class="{ 'dark': darkMode }">
+    <div class="flex flex-wrap flex-col min-h-screen">
+      <Header @add-location="addLocation"/>
 
-    <div class="flex flex-wrap grid-cols-5 gap-2 my-5 mx-5">
-      <template v-for="(data, index) in weatherData">
-        <WeatherItems :id="'item' + index"
-                    :weatherData="data"
-                    :class="{ hovered: isHovered }"
-                    @mouseover="isHovered = true" @mouseleave="isHovered = false" />
-      </template>
-    </div>  
+      <div class="flex flex-wrap grid-cols-5 gap-2 my-5 mx-5">
+        <template v-for="(data, index) in weatherData">
+          <WeatherItems :id="'item' + index" :weatherData="data"/>
+        </template>
+      </div>  
+    </div>
   </div>
 </template>
 
