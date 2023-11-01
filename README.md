@@ -1,4 +1,4 @@
-# Weather App with Vue.js
+# Weather App with Vue.js & Tailwind
 
 ## Recommended IDE Setup
 
