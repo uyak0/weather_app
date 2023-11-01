@@ -95,9 +95,11 @@
 
 <template>
   <!-- Dark Mode -->
-  <div class="dark:bg-black bg-white" :class="{ 'dark': darkMode }">
+  <div :class="{ 'dark': darkMode }">
+  <div class="bg-white dark:frappe dark:bg-crust" >
+
     <div class="flex flex-wrap flex-col min-h-screen">
-      <Header @add-location="addLocation"/>
+      <Header @add-location="addLocation" @dark-toggle="darkMode = !darkMode"/>
 
       <div class="flex flex-wrap grid-cols-5 gap-2 my-5 mx-5">
         <template v-for="(data, index) in weatherData">
@@ -106,5 +108,7 @@
       </div>  
     </div>
   </div>
+  </div>
 </template>
+
 

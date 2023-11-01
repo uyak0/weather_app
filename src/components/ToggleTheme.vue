@@ -1,6 +1,7 @@
 <script lang="ts">
     export default {
         name: "ToggleTheme",
+        emits: ['dark-toggle'],
 
         data() {
             return {
@@ -15,13 +16,13 @@
 </script>
 
 <template>
-    <label class="relative inline-flex items-center cursor-pointer" @change="isToggled=!isToggled, $emit('dark-toggle', isToggled)" >
+    <label class="relative inline-flex items-center cursor-pointer" @change="isToggled = !isToggled, $emit('dark-toggle')" >
         <input type="checkbox" value="" class="sr-only peer">
-        <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-0 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+        <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-0 peer-focus:ring-blue-300 dark:peer-focus:ring-sky rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-base after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white dark:after:bg-base after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-sky"></div>
         
         <!-- Moon icon -->
         <div class="absolute left-12 w-3/6 ml-1.5">
-            <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" :class="{ 'fill-gray-900': isToggled, 'fill-gray-400': !isToggled }">
+            <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" :class="{ 'fill-sky': isToggled, 'fill-gray-400': !isToggled }">
                 <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                 <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
                 <g id="SVGRepo_iconCarrier"> 
