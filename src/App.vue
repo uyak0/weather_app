@@ -87,8 +87,9 @@
 
     async mounted() {
       await this.findCurrLocation();
-      console.log(this.coords);
       await this.findWeather();
+      
+      console.log(this.weatherData);
     }
   }
 </script>

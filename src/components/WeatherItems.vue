@@ -3,13 +3,18 @@
         name: "WeatherItems",
         props: ["weatherData"],
         emits:["delete-item"],
-        data() {
-            return {
-                showDiv: true 
-            }
-        },
 
         methods: {
+            assignIcon(icon: string): string {
+                if (icon.slice(0, 2) !== ("01" || "02")) {
+                    let weatherTime = icon.slice(2, 3) //takes last letter (n or d)
+                    if (weatherTime === "n") {  
+                        icon.replace('n','d');
+                    }
+                    
+                }
+                return icon
+            }
         }
     }
 </script>
@@ -24,7 +29,7 @@
         </div>
         
         <!-- Weather icon -->
-        <img class="w-32" :src="`http://openweathermap.org/img/wn/${weatherData.weather[0].icon}@2x.png`" alt="weather icon">
+        <img class="w-32" :src="`src/assets/weather-icons/${assignIcon(weatherData.weather[0].icon)}.svg`" alt="weather icon">
 
         <!-- Weather data -->
         <div class="flex flex-col">
