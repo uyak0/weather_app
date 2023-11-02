@@ -103,7 +103,7 @@
 
       <div class="flex flex-wrap grid-cols-5 gap-2 my-5 mx-5">
         <template v-for="(data, index) in weatherData">
-          <WeatherItems :id="'item' + index" :weatherData="data"/>
+          <WeatherItems :id="'item' + index" :weatherData="data" @delete-item="weatherData.splice(index,1), coords.splice(index, 1)"/>
         </template>
       </div>  
     </div>
