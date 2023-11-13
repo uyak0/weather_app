@@ -2,28 +2,34 @@
     export default {
         name: "WeatherItems",
         props: ["weatherData"],
-        data() {
-            return {
-                showDiv: true 
-            }
-        },
+        emits:["delete-item"],
 
         methods: {
+            assignIcon(icon: string): string {
+                if (icon.slice(0, 2) !== ("01" || "02")) {
+                    let weatherTime = icon.slice(2, 3) //takes last letter (n or d)
+                    if (weatherTime === "n") {  
+                        icon.replace('n','d');
+                    }
+                    
+                }
+                return icon
+            }
         }
     }
 </script>
 
 <template>
-    <div class="transition ease-in-out duration-500 hover:bg-gray-100 border-solid border dark:border-0 relative rounded-lg w-64 h-64 flex-col justify-center items-center bg-white dark:bg-base dark:text-text text-center cursor-pointer shadow-md hover:shadow-2xl hover:-translate-y-4" :class="{ hidden : !showDiv, flex: showDiv}" @click="showDiv = false">
+    <div class="transition ease-in-out duration-500 hover:bg-gray-100 border-solid border dark:border-base relative rounded-lg w-64 h-64 flex-col justify-center items-center bg-white dark:bg-base dark:text-text text-center cursor-pointer shadow-md hover:shadow-2xl hover:-translate-y-4 flex"  >
         <!-- Close button -->
-        <div class="fill-[#9ca3af] dark:fill-text absolute top-2 left-2">    
-            <svg class="fill-text" xmlns="http://www.w3.org/2000/svg" width="15px" viewBox="0 0 24 24">
+        <div class="absolute top-2 left-2 hover:bg-slate-400 dark:hover:bg-overlay0 transition ease-in-out duration-500 rounded-full py-1 px-1" @click="$emit('delete-item')">    
+            <svg xmlns="http://www.w3.org/2000/svg" width="15px" viewBox="0 0 24 24">
                 <path d="M5 5L19 19M5 19L19 5" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
         </div>
-
+        
         <!-- Weather icon -->
-        <img class="w-32" :src="`http://openweathermap.org/img/wn/${weatherData.weather[0].icon}@2x.png`" alt="weather icon">
+        <img class="w-32" :src="`src/assets/weather-icons/${assignIcon(weatherData.weather[0].icon)}.svg`" alt="weather icon">
 
         <!-- Weather data -->
         <div class="flex flex-col">
