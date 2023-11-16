@@ -3,10 +3,15 @@ module.exports = {
   darkMode: 'class',
   content: [
     "./index.html",
-    "./src/**/*.{vue,js,ts,jsx,tsx}",
+    "./src/**/*.{vue,js,ts,jsx,tsx,svg}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      content: {
+        'logo': "url('/logo.svg')",
+        'logo-dark': "url('/logo-dark.svg')",
+      },
+    },
   },
   plugins: [require("@catppuccin/tailwindcss")],
 }

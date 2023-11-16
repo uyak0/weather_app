@@ -2,7 +2,13 @@
     export default {
         name: "WeatherItems",
         props: ["weatherData"],
-        emits:["delete-item"],
+        emits: ["delete-item"],
+
+        data() {
+            return {
+                publicPath: process.env.BASE_URL
+            }
+        },
 
         methods: {
             assignIcon(icon: string): string {
@@ -29,7 +35,7 @@
         </div>
         
         <!-- Weather icon -->
-        <img class="w-32" :src="`src/assets/weather-icons/${assignIcon(weatherData.weather[0].icon)}.svg`" alt="weather icon">
+        <img class="w-32" :src="`weather-icons/${assignIcon(weatherData.weather[0].icon)}.svg`" alt="weather icon">
 
         <!-- Weather data -->
         <div class="flex flex-col">
